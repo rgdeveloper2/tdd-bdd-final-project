@@ -135,7 +135,7 @@ class TestProductModel(unittest.TestCase):
         self.assertEqual(len(products),1)
         self.assertEqual(products[0].id, original_id)
         self.assertEqual(products[0].description,"product description")
-
+       
     def test_delete_a_product(self):
         """It should Delete a Products"""
         product = ProductFactory()
@@ -193,3 +193,15 @@ class TestProductModel(unittest.TestCase):
         self.assertEqual(found.count(), count)
         for product in found:
             self.assertEqual(product.category, category)
+
+    def test_find_a_product_by_price(self):
+        """It should find a product by price"""
+        products = ProductFactory.create_batch(10)
+        for product in products:
+            product.create()
+        price = products[0].price
+        count = len([product for product in products if product.price == price])
+        found = Product.find_by_price(price)
+        self.assertEqual(found.count(), count)
+        for product in found:
+            self.assertEqual(product.price, price)
